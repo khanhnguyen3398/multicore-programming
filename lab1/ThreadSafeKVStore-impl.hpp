@@ -3,6 +3,8 @@
 #include <mutex>
 #include <unordered_map>
 
+std::mutex mut1;
+
 template <typename K, typename V>
 V ThreadSafeKVStore<K,V>::get_sum()
 {
@@ -16,7 +18,7 @@ V ThreadSafeKVStore<K,V>::get_sum()
 template <typename K, typename V>
 bool ThreadSafeKVStore<K,V>::insert(const K key, const V value)
 {
-	std::unique_lock<std::mutex> lock(mut);
+	std::unique_lock<std::mutex> lock(mut1);
 	bool found = false;
 	for ( auto it = hashmap.begin(); it != hashmap.end(); ++it ) {
 		if (it->first == key) {
@@ -26,7 +28,7 @@ bool ThreadSafeKVStore<K,V>::insert(const K key, const V value)
 		}
 	}
 	if (!found) {
-		hashmap.insert (std::make_pair<K, V>(key,value));
+		hashmap.insert (std::make_pair(key,value));
 	}
 	lock.unlock();
 	return true;
@@ -36,7 +38,7 @@ bool ThreadSafeKVStore<K,V>::insert(const K key, const V value)
 template <typename K, typename V>
 bool ThreadSafeKVStore<K,V>::accumulate(const K key, const V value)
 {
-	std::unique_lock<std::mutex> lock(mut);
+	std::unique_lock<std::mutex> lock(mut1);
 	bool found = false;
 	for ( auto it = hashmap.begin(); it != hashmap.end(); ++it ) {
 		if (it->first == key) {
@@ -57,7 +59,7 @@ template <typename K, typename V>
 bool ThreadSafeKVStore<K,V>::lookup(const K key, V& value)
 {
 	bool found = false;
-	std::unique_lock<std::mutex> lock(mut);
+	std::unique_lock<std::mutex> lock(mut1);
 	for ( auto it = hashmap.begin(); it != hashmap.end(); ++it ) {
 		if (it->first == key) {
 			found = true;
@@ -73,7 +75,7 @@ bool ThreadSafeKVStore<K,V>::lookup(const K key, V& value)
 template <typename K, typename V>
 bool ThreadSafeKVStore<K,V>::remove(const K key)
 {
-	std::unique_lock<std::mutex> lock(mut);
+	std::unique_lock<std::mutex> lock(mut1);
 	for ( auto it = hashmap.begin(); it != hashmap.end(); ++it ) {
 		if (it->first == key) {
 			hashmap.erase(key);

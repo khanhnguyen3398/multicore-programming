@@ -14,7 +14,7 @@ static void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeLi
 
 int main(int argc, char **argv)
 {
-	int num_threads = 3;
+	int num_threads = 5;
 	//opt = getopt(argc, argv, arg);
 
 	ThreadSafeKVStore<std::string, int32_t> hashmap;
@@ -22,18 +22,25 @@ int main(int argc, char **argv)
 
 	std::vector<std::thread> threads;
 	for (int i = 0; i < num_threads; i++) {
-		threads.push_back(std::thread (tester, std::ref(hashmap), std::ref(queue), i));
+		threads.push_back(std::thread ([=] { tester(hashmap, queue, i); }));
 	}
+
 
 	int num_queue = num_threads;
 	int32_t sum_all = 0;
 	int32_t element;
 
 	while (num_queue > 0 ) {
+		cout << "listening " << endl;
 		queue.listen(element);
+		cout << "element listend is " << element << endl;
 		sum_all += element;
 		num_queue--;
 	}
+	
+	cout << "checkpoint 1 \n" << endl;
+
+	cout << "checkpoint 2 \n" << endl;
 
 	for (int j = 0; j< num_threads; j++) {
 		threads.at(j).join();
@@ -57,6 +64,10 @@ static void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeLi
   	std::vector<int32_t> values_list;
   	int32_t keys_list_sz;
   	int32_t sum = 0;
+
+
+	cout << "checkpoint 2 \n" << endl;
+
 	for(int i = 0; i < 10000; i++) {
 		int operation = rand() % 10;
 		if (operation < 2) {
@@ -70,10 +81,13 @@ static void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeLi
 			sum += value;
 		} else {
 			keys_list_sz = keys_list.size();
-			int pos = rand() % keys_list_sz;
-			hashmap.lookup(keys_list.at(pos), values_list.at(pos));
+			if (keys_list_sz) {
+				int pos = rand() % keys_list_sz;
+				hashmap.lookup(keys_list.at(pos), values_list.at(pos));
+			}
 		}
 	}
 
+	cout << "sum is " << sum << endl;
 	queue.push(sum);
 }

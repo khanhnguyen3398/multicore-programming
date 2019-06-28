@@ -5,7 +5,6 @@
 #include <mutex>
 #include <unordered_map>
 
-
 template <typename K, typename V>
 class ThreadSafeKVStore {
 	public : 
@@ -17,7 +16,7 @@ class ThreadSafeKVStore {
 
 	private :
 		std::unordered_map<K, V> hashmap;
-		std::mutex mut;
+
 };
 
 #include "ThreadSafeKVStore-impl.hpp"
