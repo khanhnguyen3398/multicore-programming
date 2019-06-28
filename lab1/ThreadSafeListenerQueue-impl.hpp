@@ -37,11 +37,10 @@ bool ThreadSafeListenerQueue<T>::listen(T& element)
 {
 	std::unique_lock<std::mutex> lock(mut);
 	while (queue.size() == 0) {
-		cond.wait(mut, std::chrono::seconds(1));
+		cond.wait_for(lock, std::chrono::seconds(1));
 	}
-	T rvalue = queue.end();
-	*element = rvalue;
-	queue.pop_back;
+	element = queue.end();
+	queue.pop_back();
 	lock.unlock();
-	return rvalue;
+	return true;
 }

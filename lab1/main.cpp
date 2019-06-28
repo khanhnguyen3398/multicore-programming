@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeListenerQueue<int32_t> queue, int id);
+static void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeListenerQueue<int32_t> queue, int id);
 
 int main(int argc, char **argv)
 {
@@ -48,12 +48,13 @@ int main(int argc, char **argv)
 
 }
 
-void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeListenerQueue<int32_t> queue, int id)
+static void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeListenerQueue<int32_t> queue, int id)
 {
 	srand(id);
 	std::default_random_engine generator;
   	std::uniform_int_distribution<int32_t> distribution(-256,256);
   	std::vector<string> keys_list;
+  	std::vector<int32_t> values_list;
   	int32_t keys_list_sz;
   	int32_t sum = 0;
 	for(int i = 0; i < 10000; i++) {
@@ -64,13 +65,13 @@ void tester(ThreadSafeKVStore<std::string, int32_t> hashmap, ThreadSafeListenerQ
 			string key = "user" + num;
 			int32_t value = distribution(generator);
 			keys_list.push_back(key);
+			values_list.push_back(value);
 			hashmap.insert(key, value);
 			sum += value;
 		} else {
 			keys_list_sz = keys_list.size();
 			int pos = rand() % keys_list_sz;
-			string key_lookup = keys_list.at(pos);
-			hashmap.lookup(key_lookup);
+			hashmap.lookup(keys_list.at(pos), values_list.at(pos));
 		}
 	}
 
