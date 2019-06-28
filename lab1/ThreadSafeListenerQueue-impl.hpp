@@ -1,58 +1,47 @@
-#include "pthread.h"
+#include <thread>
 #include <mutex>
 #include <iostream>
+#include <condition_variable>
+#include <list>
 
-template <T>
-ThreadSafeListenerQueue<T>::ThreadSafeListenerQueue()
-{
-	pthread_mutex_init(&lock, NULL);
-	pthread_cond_init(&empty, NULL);
-
-}
-
-template <T>
+template <typename T>
 bool ThreadSafeListenerQueue<T>::push(const T element)
 {
-	pthread_mutex_lock(lock);
+	std::unique_lock<std::mutex> lock(mut);
 	queue.push_front(element);
-	size++;
-	pthread_cond_signal(empty);
-	pthread_mutex_unlock(lock);
+	cond.notify_all();
+	lock.unlock();
 	return true;
 
 }
 
-template <T>
+template <typename T>
 bool ThreadSafeListenerQueue<T>::pop(T& element)
 {
-	pthread_mutex_lock(lock);
-	if (size > 0) {
-		std::list<Tt>::iterator it  = queue.end();
-		*element = *it;
-	// does it copy or will it be disappeared?
-		queue.erase(it);
-		size--;
-		pthread_mutex_unlock(lock);
+	std::unique_lock<std::mutex> lock(mut);
+	if (queue.size() > 0) {
+		element = queue.end();
+		queue.pop_back();
+		lock.unlock();
 		return true;
 	} else {
-		pthread_mutex_unlock(lock);
-		return false;
+		lock.unlock();
+		return true;
 	}
 
 
 }
 
-template <T>
+template <typename T>
 bool ThreadSafeListenerQueue<T>::listen(T& element)
 {
-	pthread_mutex_lock(lock);
-	while (size <= 0) {
-		pthread_cond_wait(&cond, &lock);
+	std::unique_lock<std::mutex> lock(mut);
+	while (queue.size() == 0) {
+		cond.wait(mut, std::chrono::seconds(1));
 	}
-	std::list<Tt>::iterator it  = queue.end();
-	*element = *it;
-	// does it copy or will it be disappeared?
-	queue.erase(it);
-	size--;
-	pthread_mutex_unlock(lock);
+	T rvalue = queue.end();
+	*element = rvalue;
+	queue.pop_back;
+	lock.unlock();
+	return rvalue;
 }
