@@ -3,6 +3,9 @@
 #include <mutex>
 #include <unordered_map>
 
+// Implementation of ThreadSafeKVStore where I used a mutex
+// and a unique lock to lock and unlock. 
+
 std::mutex mut1;
 
 template <typename K, typename V>
@@ -28,7 +31,7 @@ bool ThreadSafeKVStore<K,V>::insert(const K key, const V value)
 		}
 	}
 	if (!found) {
-		hashmap.insert (std::make_pair(key,value));
+		hashmap.insert(std::make_pair(key,value));
 	}
 	lock.unlock();
 	return true;
@@ -48,7 +51,7 @@ bool ThreadSafeKVStore<K,V>::accumulate(const K key, const V value)
 		}
 	}
 	if (!found) {
-		hashmap.insert (std::make_pair<K, V>(key,value));
+		hashmap.insert (std::make_pair(key,value));
 	}
 	lock.unlock();
 	return true;
