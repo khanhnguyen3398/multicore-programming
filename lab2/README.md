@@ -1,7 +1,10 @@
 compilation instructions:
 
 g++ -std=c++11 -o lab2 main.cpp -lpthread
-./lab2 -n 50
+./lab2 -n <N>
+
+I'm sorry I couldn't figure out how to include the number of degree. It is currently set to 3. Please change 
+directly through opening main.cpp on line 33 variable int deg. 
 
 
 WorkNode that'll be in the work queue where the threads from thread pool
