@@ -1,3 +1,7 @@
 hw1
 0
 -100 = no submission
+
+hw2
+67.5
+-5 = Q2 second part of the question is not answered; -7.5 = Q3 lock is used but becase you do not use a local variable before you return the sum of 3 global variables another thread can possibly change the value of any of the global variables; -10 = Q4 same reasoning as deductions for Q3; -5 = Q6A lock should have been used before condition variable in listen() and pop() should not block; -5 = Q6B please see the implementation on the class slide and listen() is missing
