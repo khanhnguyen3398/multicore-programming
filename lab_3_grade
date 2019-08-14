@@ -1,0 +1,5 @@
+lab_3_grade
+
+95
+
+-5 = static assertion failed: template argument not a floating point type line 243 - main.cpp
