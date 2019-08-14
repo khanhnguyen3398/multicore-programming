@@ -7,7 +7,7 @@
 #include <thread>
 #include "ThreadSafeListenerQueue.hpp"
 #include "ThreadSafeKVStore.hpp"
-#include "maze.cpp"
+#include "maze.cc"
 
 static void mixer( ThreadSafeKVStore<int, std::vector<int> >& hashmap, ThreadSafeListenerQueue<std::vector<int>>& queue, int num_threads, int id);
 static void mutator(Maze problem,ThreadSafeKVStore<int, std::vector<int> >& hashmap, ThreadSafeListenerQueue<std::vector<int>>& queue, int num_threads, int id);

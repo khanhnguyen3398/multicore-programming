@@ -5,6 +5,8 @@ g++ -std=c++17 -o lab4 main.cpp -lpthread
 ./lab4 <number_oftotal threads> <threshold g for determining
 completion> <rows> <cols> <genome length>
 
+Threshold has been 100,000 for all my experiments.
+
 What I found is that the larger the maze size, the worse the time will
 get and also the worse the score will get. It also means that the
 genome size will matter more as well. There's an optimal range of genome size
