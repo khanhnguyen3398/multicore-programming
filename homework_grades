@@ -9,3 +9,7 @@ hw2
 hw3
 100
 -0 = Q(3) i would be careful about the order of locking and unlocking for more complex situations
+
+hw4
+83.5
+-4 = Q3(b) push and pop are related because both read and write pointers are used to decide if the buffer is full/empty; -6.25 = Q4 (a) question specifically asked for what kinds (i.e., categorize it); -6.25 = Q4(b) should mention caching would work with x86 like architectures 
