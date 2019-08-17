@@ -1,0 +1,5 @@
+lab_4_grade
+
+95
+
+-5 = you are retrieving old_row and old_col but their values are not updated so whenever you hit a wall you reset to the start_row and start_col line 230;
